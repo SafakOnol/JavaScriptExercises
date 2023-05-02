@@ -1,7 +1,54 @@
+#titles
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    z-index: 1;
+    margin-top: 200px;
+    margin-bottom: 20px;
+    background-color: #f3dc57;
+}
+
+#titles h1
+{
+    font-family: Arial, sans-serif;
+    font-size: 46px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    text-shadow: 1px 1px #ccc;
+    margin: 20px 0;
+}
+
+#titles h3
+{
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    text-shadow: 1px 1px #ccc;
+    margin: 20px 0;
+}
+
 #grid
 {
     display: flex;
     flex-wrap: wrap;
-    width: 400px;
-    height: 300px;
-};
+    justify-content: center;
+    align-items: center;
+    width: 480px;
+    height: 360px;
+    margin: auto;
+}
+
+#grid img
+{
+    margin: 10px;
+}
+
+
+

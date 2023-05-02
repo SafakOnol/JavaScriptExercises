@@ -58,11 +58,15 @@ const gridDisplay = document.querySelector('#grid'); // searches for the id grid
 
 const resultDisplay = document.querySelector('#result');
 
+const roundDisplay = document.querySelector('#round');
+
 let cardsChosen = [];
 
 let cardsChosenIds = [];
 
 const cardsWon = [];
+
+let round = [];
 
 function createBoard()
 {
@@ -82,6 +86,8 @@ function checkMatch()
     const cards = document.querySelectorAll('#grid img');
     const selectedCardOneId = cardsChosenIds[0];
     const selectedCardTwoId = cardsChosenIds[1];
+    round.push('turn');
+    roundDisplay.textContent = round.length;
     console.log(cards);
     console.log('Check for match!');
     if (selectedCardOneId == selectedCardTwoId)
