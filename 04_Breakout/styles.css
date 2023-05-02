@@ -1,0 +1,33 @@
+.grid
+{
+    position: absolute;
+    width: 560px;
+    height: 300px;
+    border: solid black 2px;
+    background-color:darkgrey;
+}
+
+.block
+{
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    background-color: blue;
+}
+
+.player
+{
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    background-color:brown;
+}
+
+.ball
+{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: yellow;
+}
