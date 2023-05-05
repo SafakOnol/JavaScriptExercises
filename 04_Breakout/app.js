@@ -1,6 +1,7 @@
 // block variables and grid
 
 const grid = document.querySelector('.grid')
+const scoreDisplay = document.querySelector('#score')
 const gridWidth = 560
 const gridHeight = 300
 
@@ -12,7 +13,8 @@ let playerHeight = 20
 
 const ballDiameter = 20
 
-let timerId;
+let timerId
+let score = 0
 
 
 // player variables
@@ -22,7 +24,7 @@ let playerCurrentPosition = playerStart
 // ball variables
 const ballStart = [270, 40]
 let ballCurrentPosition = ballStart
-let ballVelX = 0.6;
+let ballVelX = (Math.random() + 0.5) * 0.5; // min 0.25 - max 0.75 --> Safak the math genius!
 let ballVelY = 0.6;
 let ballPosX = ballCurrentPosition[0]
 let ballPosY = ballCurrentPosition[1]
@@ -32,6 +34,14 @@ let playerLeft;
 let playerRight;
 let playerTopY;
 let playerLimitY;
+
+// block collision
+let blockLeft
+let blockRight
+let blockTopY
+let blockBottomY
+let blockTopLimitY
+let blockBottomLimitY
 
 // create Block class
 class Block
@@ -79,6 +89,17 @@ function addBlocks()
 }
 
 addBlocks()
+
+// define block collision borders
+// for (let i = 0; i < blocks.length; i++)
+// {
+//     blockLeft       = blocks[i].bottomLeft[0] - ballDiameter/2
+//     blockRight      = blocks[i].bottomLeft[0] + blockWidth - ballDiameter/2
+//     blockTopY       = blocks[i].topLeft[1] + blockHeight
+//     blockTopLimitY  = blockTopY - ballDiameter/4
+//     blockBottomY    = blocks[i].bottomLeft[1]
+//     blockBottomLimitY = blockBottomY + ballDiameter/4
+// }
 
 // add player
 const player = document.createElement('div')
@@ -146,7 +167,7 @@ function moveBall()
     ballPosX += ballVelX;
     ballPosY += ballVelY;
     drawBall()
-    checkCollision()
+    handleCollision()
 }
 
 timerId = setInterval(moveBall, 1)
@@ -158,10 +179,8 @@ const borderTopY = gridHeight - ballDiameter
 const borderBottomY = 0
 
 
-
-
-// check collisions
-function checkCollision()
+// check collisions and react
+function handleCollision()
 {
    // right edge
     if (ballPosX > borderRightX)
@@ -189,8 +208,10 @@ function checkCollision()
    {
         ballPosY = borderBottomY
         ballVelY *= -1.0
-        console.log('Bottom!')
-        //alert('You Lost!')
+
+        clearInterval(timerId)
+        scoreDisplay.innerHTML = 'GAME OVER!'
+        document.removeEventListener('keydown', movePlayer)
    }
 
    // hit player
@@ -198,6 +219,76 @@ function checkCollision()
    {
         ballVelY *= -1.0
         ballPosY = playerTopY
-        console.log('Hit!')
+        //console.log('Hit!')
    }
+
+   for (let i = 0; i < blocks.length; i++)
+    {
+        blockLeft       = blocks[i].bottomLeft[0] - ballDiameter/2
+        blockRight      = blocks[i].bottomRight[0] - ballDiameter/2
+        blockTopY       = blocks[i].topLeft[1] + blockHeight - ballDiameter
+        blockTopLimitY  = blockTopY - ballDiameter/4
+        blockBottomY    = blocks[i].bottomLeft[1] - ballDiameter
+        blockBottomLimitY = blockBottomY + ballDiameter/4
+
+        const allBlocks = Array.from(document.querySelectorAll('.block'))
+
+
+        // top edge
+        if (ballPosX < blockRight && ballPosX > blockLeft &&
+            blockTopLimitY < ballPosY && ballPosY < blockTopY && ballVelY < 0)
+            {
+                ballPosY = blockTopY
+                ballVelY *= -1.0
+                console.log(i);
+                allBlocks[i].classList.remove('block') // remove from allBlocks array
+                blocks.splice(i, 1) // remove the block in the index i from block class
+                score++
+                scoreDisplay.innerHTML = score
+            }
+
+        // bottom edge
+        if (ballPosX < blockRight && ballPosX > blockLeft &&
+            blockBottomY < ballPosY && ballPosY < blockBottomLimitY && ballVelY > 0)
+            {
+                ballPosY = blockBottomY
+                ballVelY *= -1.0
+                console.log(i);
+                allBlocks[i].classList.remove('block') // remove from allBlocks array
+                blocks.splice(i, 1) // remove the block in the index i from block class
+                score++
+                scoreDisplay.innerHTML = score
+            }
+
+        // left edge
+        if (ballPosX < blockRight && ballPosX > blockLeft &&
+                 blockBottomY < ballPosY && ballPosY < blockTopY && ballVelX > 0)
+            {
+                ballPosX = blockLeft
+                ballVelX *= -1.0
+                console.log(i);
+                allBlocks[i].classList.remove('block') // remove from allBlocks array
+                blocks.splice(i, 1) // remove the block in the index i from block class
+                score++
+                scoreDisplay.innerHTML = score
+            }
+        // right edge
+        if (ballPosX < blockRight && ballPosX > blockLeft &&
+                 blockBottomY < ballPosY && ballPosY < blockTopY && ballVelX < 0)
+            {
+                ballPosX = blockRight
+                ballVelX *= -1.0
+                console.log(i);
+                allBlocks[i].classList.remove('block') // remove from allBlocks array
+                blocks.splice(i, 1) // remove the block in the index i from block class
+                score++
+                scoreDisplay.innerHTML = score
+             }
+        if (blocks.length === 0)
+        {
+            scoreDisplay.innerHTML = 'YOU WIN!'
+            clearInterval(timerId)
+            document.removeEventListener('keydown', movePlayer)
+        }
+    }
 }
